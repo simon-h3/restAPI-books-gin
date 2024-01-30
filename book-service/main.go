@@ -27,8 +27,37 @@ var books = []Book{
 func main() {
 	router := gin.Default()	// create a new Gin router
 	router.GET("/books", getBooks)	// register the GET handler for /books route
+    router.POST("/albums", postBook)
+	router.GET("/books/:title", getBookByTitle)	// register the GET handler for /books/:title route
+	router.GET("/books/:author", getBookByAuthor)	// register the GET handler for /books/:author route
 
 	router.Run("localhost:8080")	// start the server
+}
+
+// GET /books/:title
+func getBookByTitle(c *gin.Context) {
+	title := c.Param("title")
+
+	for _, a := range books {
+		if a.Title == title {
+			c.IndentedJSON(http.StatusOK, a)
+			return
+		}
+	}
+	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "book not found"})
+}
+
+// GET /books/:author
+func getBookByAuthor(c *gin.Context) {
+	author := c.Param("author")
+
+	for _, a := range books {
+		if a.Author == author {
+			c.IndentedJSON(http.StatusOK, a)
+			return
+		}
+	}
+	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "book not found"})
 }
 
 // GET /books
@@ -36,6 +65,22 @@ func main() {
 func getBooks(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, books)	// serialize the books slice to JSON and send it back in the response
 }
+
+
+func postBook(c *gin.Context) {
+	var newBook Book
+
+	// Call BindJSON to bind the received JSON to newBook
+	if err := c.BindJSON(&newBook); err != nil {
+		return
+	}
+
+	// Add the new book to the slice.
+	books = append(books, newBook)
+	c.IndentedJSON(http.StatusCreated, newBook)
+}
+
+
 
 
 
