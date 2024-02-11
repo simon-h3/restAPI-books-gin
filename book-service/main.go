@@ -27,9 +27,9 @@ var books = []Book{
 func main() {
 	router := gin.Default()	// create a new Gin router
 	router.GET("/books", getBooks)	// register the GET handler for /books route
-    router.POST("/albums", postBook)
+    router.POST("/books", postBook)
 	router.GET("/books/:title", getBookByTitle)	// register the GET handler for /books/:title route
-	router.GET("/books/:author", getBookByAuthor)	// register the GET handler for /books/:author route
+	// router.GET("/books/:author", getBookByAuthor)	// register the GET handler for /books/:author route
 
 	router.Run("localhost:8080")	// start the server
 }
